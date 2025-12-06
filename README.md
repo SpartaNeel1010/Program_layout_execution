@@ -24,47 +24,22 @@ This project demonstrates function calls and recursion on the SC8 processor. It 
 Program_Layout_Execution/
 ├── assembly/                    # Assembly implementations
 │   ├── factorial.asm           # Recursive factorial in SC8 assembly
-│   ├── factorial.bin           # Assembled binary
 │   ├── multiply.asm            # Recursive multiplication in SC8 assembly
-│   └── multiply.bin            # Assembled binary
 │
 ├── c_source/                    # C implementations
 │   ├── factorial.c             # Recursive factorial in C
 │   └── multiply.c              # Recursive multiplication in C
 │
 ├── CPU(project 1)/              # SC8 CPU from Project 1
-│   ├── bin/
-│   │   ├── assembler           # SC8 assembler executable
-│   │   └── emulator            # SC8 emulator executable
 │   └── src/
 │       ├── assembler/          # Assembler source code
-│       │   ├── assembler.cpp
-│       │   ├── assembler.h
-│       │   ├── lexer.cpp
-│       │   ├── lexer.h
-│       │   ├── main.cpp
-│       │   ├── parser.cpp
-│       │   ├── parser.h
-│       │   ├── symbol_table.cpp
-│       │   └── symbol_table.h
 │       └── emulator/           # Emulator source code
-│           ├── alu.cpp
-│           ├── alu.h
-│           ├── bus.cpp
-│           ├── bus.h
-│           ├── cpu.cpp
-│           ├── cpu.h
-│           ├── main.cpp
-│           ├── memory.cpp
-│           └── memory.h
-│
 ├── docs/                        # Documentation
 │   ├── FUNCTION_CALLS.md       # Function call mechanism explained
 │   ├── MEMORY_LAYOUT.md        # Memory organization details
 │   └── RECURSION_EXPLAINED.md  # Recursion implementation guide
 │
 ├── report/                      # Project report
-│   ├── PROJECT_REPORT.md       # Markdown report
 │   └── PROJECT_REPORT.pdf      # PDF report
 │
 ├── Makefile                     # Build automation
