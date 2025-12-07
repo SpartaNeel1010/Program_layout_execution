@@ -20,7 +20,7 @@ CFLAGS = -Wall -Wextra -std=c11 -O2
 # C++ Compiler for CPU
 CXX = g++
 CXXFLAGS = -std=c++11 -Wall -Wextra -O2
-CPU_INCLUDE = -I$(CPU_SRC_EMU) -I$(CPU_SRC_ASM)
+CPU_INCLUDE = -I"$(CPU_SRC_EMU)" -I"$(CPU_SRC_ASM)"
 
 # C Programs
 C_PROGRAMS = $(C_SOURCE_DIR)/factorial $(C_SOURCE_DIR)/multiply
@@ -35,22 +35,29 @@ all: check-cpu c-programs asm-programs
 	@echo "✓ All programs built successfully!"
 
 # Build CPU (SC8 emulator and assembler)
-# Note: Due to directory name with parentheses, manual build is recommended
-# Run: cd "CPU(project 1)" && make all
 .PHONY: cpu
 cpu:
-	@echo "Building SC8 CPU..."
-	@if [ ! -f "$(CPU_BIN)/assembler" ]; then \
-		echo "  Assembler needs to be built manually"; \
-		echo "  cd 'CPU(project 1)' && cd .. && cd 'CMPE220_project' && make assembler"; \
-	fi
-	@if [ ! -f "$(CPU_BIN)/emulator" ]; then \
-		echo "  Emulator needs to be built manually"; \
-		echo "  cd 'CPU(project 1)' && cd .. && cd 'CMPE220_project' && make emulator"; \
-	fi
-	@if [ -f "$(CPU_BIN)/assembler" ] && [ -f "$(CPU_BIN)/emulator" ]; then \
-		echo "✓ SC8 CPU tools found"; \
-	fi
+	@echo "Building SC8 CPU in $(CPU_DIR_NAME)..."
+	@mkdir -p "$(CPU_BIN)"
+	@echo "Building assembler..."
+	@$(CXX) $(CXXFLAGS) $(CPU_INCLUDE) \
+		"$(CPU_SRC_ASM)/main.cpp" \
+		"$(CPU_SRC_ASM)/assembler.cpp" \
+		"$(CPU_SRC_ASM)/lexer.cpp" \
+		"$(CPU_SRC_ASM)/parser.cpp" \
+		"$(CPU_SRC_ASM)/symbol_table.cpp" \
+		-o "$(CPU_BIN)/assembler"
+	@echo "✓ Assembler built: $(CPU_BIN)/assembler"
+	@echo "Building emulator..."
+	@$(CXX) $(CXXFLAGS) $(CPU_INCLUDE) \
+		"$(CPU_SRC_EMU)/main.cpp" \
+		"$(CPU_SRC_EMU)/cpu.cpp" \
+		"$(CPU_SRC_EMU)/alu.cpp" \
+		"$(CPU_SRC_EMU)/memory.cpp" \
+		"$(CPU_SRC_EMU)/bus.cpp" \
+		-o "$(CPU_BIN)/emulator"
+	@echo "✓ Emulator built: $(CPU_BIN)/emulator"
+	@echo "✓ SC8 CPU tools built successfully!"
 
 .PHONY: build-cpu-help
 build-cpu-help:
@@ -82,10 +89,8 @@ asm-programs: check-cpu $(ASM_BINARIES)
 check-cpu:
 	@if [ ! -f "$(CPU_BIN)/assembler" ] || [ ! -f "$(CPU_BIN)/emulator" ]; then \
 		echo "Error: SC8 CPU tools not found."; \
-		echo "Please build the CPU manually:"; \
-		echo "  cd 'CPU(project 1)' && make all"; \
-		echo "Or copy the binaries to $(CPU_BIN)/"; \
-		exit 1; \
+		echo "Building them now with 'make cpu'..."; \
+		$(MAKE) cpu; \
 	fi
 
 $(ASM_DIR)/factorial.bin: $(ASM_DIR)/factorial.asm
